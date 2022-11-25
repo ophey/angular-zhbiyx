@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
+import { Observable } from 'rxjs';
 import { CartService } from '../cart.service';
 
 @Component({
@@ -7,10 +8,16 @@ import { CartService } from '../cart.service';
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css'],
 })
-export class CartComponent {
+export class CartComponent implements OnInit {
+  shippingCosts!: Observable<{ type: string; price: number }[]>;
+
+  ngOnInit(): void {
+    this.shippingCosts = this.cartService.getShippingPrices();
+  }
   items = this.cartService.getItems();
 
   checkoutForm = this.formBuilder.group({
+    shipping: '',
     name: '',
     address: '',
   });
