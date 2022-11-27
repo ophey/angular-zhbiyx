@@ -17,7 +17,7 @@ export class CartComponent implements OnInit {
   items = this.cartService.getItems();
 
   checkoutForm = this.formBuilder.group({
-    shipping: [0.0, Validators.required],
+    shipping: ['', Validators.required],
     name: ['', Validators.required],
     address: ['', Validators.required],
   });
