@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { CartService } from '../cart.service';
 
@@ -17,11 +17,29 @@ export class CartComponent implements OnInit {
   items = this.cartService.getItems();
 
   checkoutForm = this.formBuilder.group({
-    shipping: '',
-    name: '',
-    address: '',
+    shipping: [0.0, Validators.required],
+    name: ['', Validators.required],
+    address: ['', Validators.required],
   });
 
+  get hasShippinCost() {
+    return (this.checkoutForm.get('shipping') as FormControl).valid;
+  }
+
+  get shippingCost() {
+    return (this.checkoutForm.get('shipping') as FormControl).value;
+  }
+
+  get totalCost() {
+    var result: number = 0.0;
+    for (let item of this.items) {
+      result += item.price;
+    }
+    if (this.hasShippinCost) {
+      result += Number(this.shippingCost);
+    }
+    return result;
+  }
   constructor(
     private cartService: CartService,
     private formBuilder: FormBuilder

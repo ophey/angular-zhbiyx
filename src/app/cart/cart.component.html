@@ -12,18 +12,24 @@
   (ngSubmit)="onSubmit()"
 >
   <h5>Select Shipping</h5>
-  <span *ngFor="let shipping of shippingCosts | async">
+  <span *ngFor="let shippin of shippingCosts | async">
     <span class="cost">
       <input
         name="shipping"
-        value="{{ shipping.type }}"
+        value="{{ shippin.price }}"
         type="radio"
         formControlName="shipping"
       />
-      {{ shipping.type }} @ {{ shipping.price | currency }}
+      {{ shippin.type }} @ {{ shippin.price | currency }}
     </span>
   </span>
-
+  <div class="cart-item" *ngIf="!hasShippinCost">
+    <span>Select Shipping</span>
+  </div>
+  <div class="cart-item" *ngIf="hasShippinCost">
+    <span>ShippingCost</span>
+    <span>{{ shippingCost | currency }}</span>
+  </div>
   <div>
     <label for="name"> Name </label>
     <input id="name" type="text" formControlName="name" />
@@ -33,6 +39,12 @@
     <label for="address"> Address </label>
     <input id="address" type="text" formControlName="address" />
   </div>
+  <div class="total">
+    <span>ShippingCost</span>
+    <span>{{ totalCost | currency }}</span>
+  </div>
 
-  <button class="button" type="submit">Purchase</button>
+  <button class="button" type="submit" [disabled]="!checkoutForm.valid">
+    Purchase
+  </button>
 </form>
